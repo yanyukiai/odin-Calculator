@@ -39,3 +39,45 @@ function multiply(a, b) {
 function divide(a, b) {
   return a / b;
 }
+
+const displayCurrent = document.querySelector(".display-current");
+
+const btnNumbers = document.querySelectorAll(".numbers");
+btnNumbers.forEach((button) => {
+  button.addEventListener(
+    "click",
+    () => (displayCurrent.textContent = button.id)
+  );
+});
+
+const btnOperators = document.querySelectorAll(".operators");
+btnOperators.forEach((button) => {
+  button.addEventListener(
+    "click",
+    () => (displayCurrent.textContent = button.id)
+  );
+});
+
+const btnDel = document.querySelector(".del");
+btnDel.addEventListener("click", () => {
+  displayCurrent.textContent = "0";
+});
+
+const btnAC = document.querySelector(".AC");
+btnAC.addEventListener("click", () => {
+  displayCurrent.textContent = "0";
+});
+
+const btnTBDs = document.querySelectorAll(".TBD");
+btnTBDs.forEach((button) => {
+  button.addEventListener(
+    "click",
+    () => (displayCurrent.textContent = button.id)
+  );
+});
+
+const btnEqual = document.querySelector(".equal");
+btnEqual.addEventListener(
+  "click",
+  () => (displayCurrent.textContent = "TBD: calculation results")
+);
