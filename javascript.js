@@ -6,73 +6,78 @@ console.log(operate("multiply", 15, 2));
 console.log(operate("divide", 15, 2));
 
 /**
- * display-prev window logic:
+ * display window logic:
  *
  * User input: numbers, operators, del, AC, equal, TBD (ignore for now)
- * display-prev results:
+
  * 1. input AC: 0
- * 2. input numbers/operators/TBD: display previous inputs (stored in variables)
- * 3. input del:
+ * 2. input numbers:
+ *      Display results in current display window
+ * 3. input operators:
+ *      Display results in current display window
+ * 4. input del:
  *      If no prev input, display 0
  *      If there's prev input, display previous inputs with last input deleted (stored in variables)
- * 4. input equal:
+ * 5. input equal:
  *      check if the input is syntax correct:
- *          correct: display results
+ *          correct: display results, results are saved as first number
  *          wrong: display syntax error
+ * 6. input TBD: display TBD
  * */
 
 let storedInput = "";
 let currentInput = "";
 
+const displayResult = document.querySelector(".display-result");
 const displayCurrent = document.querySelector(".display-current");
-const displayPrev = document.querySelector(".display-prev");
+
+const btnAC = document.querySelector(".AC");
+btnAC.addEventListener("click", () => {
+  storedInput = "";
+  currentInput = "";
+  displayCurrent.textContent = "0";
+  displayResult.textContent = "TBD: calculation results";
+});
 
 const btnNumbers = document.querySelectorAll(".numbers");
 btnNumbers.forEach((button) => {
   button.addEventListener("click", () => {
-    currentInput += button.id;
-    displayCurrent.textContent = currentInput;
-    storedInput += button.id;
-    displayPrev.textContent = storedInput;
+    currentInput = button.id;
+    storedInput += currentInput;
+    displayCurrent.textContent = storedInput;
   });
 });
 
 const btnOperators = document.querySelectorAll(".operators");
 btnOperators.forEach((button) => {
   button.addEventListener("click", () => {
-    displayCurrent.textContent = button.id;
-    currentInput = "";
-    storedInput += button.id;
-    displayPrev.textContent = storedInput;
+    currentInput = button.id;
+    storedInput += currentInput;
+    displayCurrent.textContent = storedInput;
   });
 });
 
 const btnDel = document.querySelector(".del");
 btnDel.addEventListener("click", () => {
-  displayCurrent.textContent = "0";
-});
-
-const btnAC = document.querySelector(".AC");
-btnAC.addEventListener("click", () => {
-  displayCurrent.textContent = "0";
-  displayPrev.textContent = "0";
-  storedInput = "";
-  currentInput = "";
+  if (storedInput.length <= 1) {
+    displayCurrent.textContent = "0";
+  } else {
+    storedInput = storedInput.slice(0, -1);
+    displayCurrent.textContent = storedInput;
+  }
 });
 
 const btnEqual = document.querySelector(".equal");
 btnEqual.addEventListener(
   "click",
-  () => (displayCurrent.textContent = "TBD: calculation results")
+  () => (displayResult.textContent = "TBD: calculation results")
 );
 
 const btnTBDs = document.querySelectorAll(".TBD");
 btnTBDs.forEach((button) => {
   button.addEventListener("click", () => {
     displayCurrent.textContent = button.id;
-    displayPrev.textContent = button.id;
     storedInput = "TBD";
-    currentInput = "TBD";
   });
 });
 
