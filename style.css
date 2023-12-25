@@ -1,4 +1,127 @@
-.header {
+/*
+Style Ideas:
+
+1. Header/Calculator is located in the middle of the screen
+2. Calculator width and height keep the same ratio
+3. Display Window and buttons are in the same width
+4. Display shows results at the right side
+4. Buttons are in the shape of a rectangle, different colors for numbers, AC/DEC, operators/=
+
+*/
+
+.header,
+.calculator,
+.display,
+.display-prev,
+.display-result,
+.buttons,
+.buttons-rows,
+.notes,
+.notes-text {
   display: flex;
+}
+
+.header {
   justify-content: center;
+}
+
+.calculator {
+  margin: auto;
+  flex-direction: column;
+  height: 300px;
+  width: 250px;
+  padding: 0;
+}
+
+.display {
+  flex-direction: column;
+  justify-content: space-evenly;
+  flex: 1 60px;
+  box-sizing: border-box;
+  align-items: end;
+  border: 2px solid black;
+  border-radius: 5px;
+  background-color: lightgray;
+  padding-right: 5px;
+  font-size: 15px;
+}
+
+.buttons {
+  flex-direction: column;
+  flex: 4 240px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 1px;
+}
+
+.buttons-rows {
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.numbers,
+.operators,
+.floatPoint {
+  box-sizing: border-box;
+  border: 1px solid rgb(118, 118, 118);
+  border-radius: 5px;
+  flex: 1;
+  padding: 0;
+  margin: 0;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+[id="0"] {
+  flex: 2;
+  padding: 1px;
+}
+
+.AC,
+.del {
+  box-sizing: border-box;
+  border: 1px solid rgb(118, 118, 118);
+  border-radius: 5px;
+  flex: 1;
+  padding: 0;
+  margin: 0;
+  font-size: 15px;
+  background-color: orange;
+  cursor: pointer;
+}
+
+.equal {
+  box-sizing: border-box;
+  border: 1px solid rgb(118, 118, 118);
+  border-radius: 5px;
+  flex: 2;
+  padding: 1px;
+  margin: 0;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.numbers:hover,
+.operators:hover,
+.floatPoint:hover,
+.equal:hover {
+  background-color: darkgray;
+}
+
+.AC:hover,
+.del:hover {
+  background-color: orangered;
+}
+
+.notes {
+  flex-direction: column;
+  width: 250px;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.notes-text {
+  margin: 0;
+  font-size: 12px;
 }

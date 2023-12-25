@@ -18,10 +18,16 @@ console.log("Hello, Calculator Project!");
  *      check if the input is syntax correct (first number, second number, operator are all available): 
  *          1) yes - show results in results window
  *          2) no - show syntax error
- * 6. input TBD: display TBD
  * */
 
-const maxLen = 10;
+/**
+ * Challenge: logic of adding floating point input
+ *
+ */
+
+const maxLen = 22;
+const totalDigitToRound = 18;
+const overFlowWarning = "Overflow";
 const displayResult = document.querySelector(".display-result");
 const displayPrev = document.querySelector(".display-prev");
 let storedInput, firstNum, secondNum, operator, validInput;
@@ -42,7 +48,21 @@ btnDel.addEventListener("click", () => {
     if (displayPrev.textContent.length <= 1) {
       initialize();
     } else {
-      displayPrev.textContent = displayPrev.textContent.slice(0, -1);
+      let lastInput = displayPrev.textContent.slice(-1);
+      if (lastInput.match(/[+\-x/]/)) {
+        operator = null;
+        storedInput = firstNum;
+        secondNum = null;
+      } else if (lastInput.match("=")) {
+        initialize();
+      } else {
+        storedInput = storedInput.length == 1 ? "0" : storedInput.slice(0, -1);
+        firstNum = operator === null ? Number(storedInput) : firstNum;
+        secondNum = operator === null ? secondNum : Number(storedInput);
+      }
+      displayPrev.textContent =
+        operator === null ? firstNum : firstNum + operator + storedInput;
+      displayResult.textContent = secondNum === null ? firstNum : secondNum;
     }
   }
 });
@@ -65,7 +85,7 @@ btnNumbers.forEach((button) => {
 const btnOperators = document.querySelectorAll(".operators");
 btnOperators.forEach((button) => {
   button.addEventListener("click", () => {
-    if (validInput && displayPrev.textContent.length < maxLen) {
+    if (validInput && displayPrev.textContent.length <= maxLen + 1) {
       let lastInput = displayPrev.textContent.slice(-1);
       if (lastInput.match(/[+\-x/]/)) {
         displayPrev.textContent = "Syntax Error";
@@ -77,10 +97,19 @@ btnOperators.forEach((button) => {
           secondNum === null
             ? firstNum
             : operate(operator, firstNum, secondNum);
-        displayResult.textContent = secondNum === null ? button.id : firstNum;
-        secondNum = null;
-        operator = button.id;
-        displayPrev.textContent = firstNum + operator;
+        if (firstNum == overFlowWarning) {
+          displayResult.textContent = overFlowWarning;
+          displayPrev.textContent = overFlowWarning;
+          validInput = false;
+        } else if (firstNum == Infinity || firstNum == "Operator Error") {
+          displayPrev.textContent = firstNum;
+          validInput = false;
+        } else {
+          displayResult.textContent = secondNum === null ? button.id : firstNum;
+          secondNum = null;
+          operator = button.id;
+          displayPrev.textContent = firstNum + operator;
+        }
       }
     }
   });
@@ -97,16 +126,35 @@ btnEqual.addEventListener("click", () => {
       displayPrev.textContent = firstNum + operator + secondNum + "=";
       storedInput = "0";
       firstNum = operate(operator, firstNum, secondNum);
-      displayResult.textContent = firstNum;
-      secondNum = null;
+      if (firstNum == overFlowWarning) {
+        displayResult.textContent = overFlowWarning;
+        displayPrev.textContent = overFlowWarning;
+        validInput = false;
+      } else if (firstNum == Infinity || firstNum == "Operator Error") {
+        displayPrev.textContent = firstNum;
+        validInput = false;
+      } else {
+        displayResult.textContent = firstNum;
+        secondNum = null;
+        operator = null;
+      }
     }
   }
 });
 
 const btnFloatPoint = document.querySelector(".floatPoint");
 btnFloatPoint.addEventListener("click", () => {
-  if (validInput && displayPrev.textContent.length < maxLen) {
-    alert("Add float point function");
+  if (
+    validInput &&
+    displayPrev.textContent.length < maxLen &&
+    !storedInput.includes(".")
+  ) {
+    storedInput = storedInput + ".";
+    firstNum = operator === null ? Number(storedInput) : firstNum;
+    secondNum = operator === null ? secondNum : Number(storedInput);
+    displayPrev.textContent =
+      operator === null ? firstNum + "." : firstNum + operator + storedInput;
+    displayResult.textContent = secondNum === null ? firstNum : secondNum;
   }
 });
 
@@ -147,8 +195,34 @@ console.log(
 
 console.log(1 + "30");
 console.log(Number("1."));
+console.log((3.1546).toFixed(3));
+console.log("3.1546".split(".")[0]);
+console.log("3.1546".split(".")[1]);
+console.log("31546".split(".")[0]);
+console.log(roundToDigits(12345678, 5));
+console.log(roundToDigits(1234567.9, 8));
+console.log(roundToDigits(123.4567890123456, 8));
+console.log(roundToDigits(123450.123456, 8));
+console.log(roundToDigits(-12345678, 5));
+console.log(roundToDigits(-123456.9, 8));
+console.log(roundToDigits(-123.4567890123456, 8));
+console.log(roundToDigits(-12345.123456, 8));
 
 /** Functions */
+
+function roundToDigits(num, totalDigitLimit) {
+  let numArr = num.toString();
+  let integerPart = numArr.split(".")[0];
+  if (numArr.length <= totalDigitLimit) {
+    return num;
+  } else if (integerPart.length > totalDigitLimit) {
+    return overFlowWarning;
+  } else if (integerPart.length >= totalDigitLimit - 1) {
+    return num.toFixed(0);
+  } else {
+    return num.toFixed(totalDigitLimit - integerPart.length - 1);
+  }
+}
 
 function initialize() {
   storedInput = "0";
@@ -210,22 +284,25 @@ function operate(operator, a, b) {
       return divide(a, b);
       break;
     default:
-      return "Operator is not among add, substract, multiply or divide.";
+      return "Operator Error";
   }
 }
 
 function add(a, b) {
-  return a + b;
+  return roundToDigits(a + b, totalDigitToRound);
 }
 
 function substract(a, b) {
-  return a - b;
+  return roundToDigits(a - b, totalDigitToRound);
 }
 
 function multiply(a, b) {
-  return a * b;
+  return roundToDigits(a * b, totalDigitToRound);
 }
 
 function divide(a, b) {
-  return a / b;
+  if (b == 0) {
+    return Infinity;
+  }
+  return roundToDigits(a / b, totalDigitToRound);
 }
