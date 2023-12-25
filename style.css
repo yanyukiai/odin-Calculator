@@ -17,7 +17,10 @@ Style Ideas:
 .buttons,
 .buttons-rows,
 .notes,
-.notes-text {
+.notes-text,
+.footer,
+.copyright,
+.github-mark {
   display: flex;
 }
 
@@ -124,4 +127,25 @@ Style Ideas:
 .notes-text {
   margin: 0;
   font-size: 12px;
+}
+
+.footer {
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  height: 40px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.github-mark {
+  height: 60%;
+  margin-left: 5px;
+  transition: transform 0.3s;
+}
+
+.github-mark:hover {
+  transform: scale(1.2) rotate(360deg);
 }
