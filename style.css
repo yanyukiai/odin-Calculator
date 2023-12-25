@@ -140,9 +140,15 @@ Style Ideas:
   transform: translate(-50%, -50%);
 }
 
+.copyright {
+  margin-right: 5px;
+}
+
 .github-mark {
-  height: 60%;
-  margin-left: 5px;
+  flex-grow: 0;
+  height: 20px;
+  width: 20px;
+  justify-content: center;
   transition: transform 0.3s;
 }
 
